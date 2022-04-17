@@ -1,6 +1,6 @@
-#include<iostream>
+
 #include"std_lib_facilities.h"
-using namespace std;
+
 constexpr char number = '8';
 constexpr char quit = 'q';
 constexpr char print = ';';
@@ -25,7 +25,7 @@ private:
 };
 Token_stream::Token_stream() : full(false), buffer(0) {}
 void Token_stream::putback(Token t) {
-	if (full) perror("Token_stream buffer full");
+	if (full) error("Token_stream buffer full");
 	buffer = t;
 	full = true;
 };
@@ -59,7 +59,7 @@ Token Token_stream::get() {
 		return Token(number, val);
 	}
 	default:
-		perror("Bad token");
+		error("Bad token");
 	}
 }
 
@@ -81,7 +81,7 @@ double primary() {
 	case'(': {
 		double d = expression();
 		t = ts.get();
-		if (t.kind != ')') perror("')' expected");
+		if (t.kind != ')') error("')' expected");
 		return d;
 	}
 	case number:
@@ -92,7 +92,7 @@ double primary() {
 		return  primary();
 
 	default:
-		perror("primary expected");
+		error("primary expected");
 		return 0;
 	}
 }
@@ -109,7 +109,7 @@ double term() {
 		case '/':
 		{
 			double d = primary();
-			if (d == 0) perror("divide by zero");
+			if (d == 0) error("divide by zero");
 			left /= d;
 			t = ts.get();
 			break;
@@ -118,7 +118,7 @@ double term() {
 		case '%':
 		{
 			//double d = primary();
-			//if (d == 0) perror("%: Zero error");
+			//if (d == 0) error("%: Zero error");
 			//left = fmod(left, d);
 			int i1 = narrow_cast<int>(left);
 			int i2 = narrow_cast<int>(primary());
